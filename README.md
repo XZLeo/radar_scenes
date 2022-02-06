@@ -1,5 +1,5 @@
 # RadarScenes Tools
-
+Mainly study the examples
 ## About
 ![viewer example](https://github.com/oleschum/radar_scenes/blob/master/doc/viewer.png?raw=true)
 
@@ -90,3 +90,6 @@ The time slider itself or the arrow keys on your keyboard can be used to scroll 
 This project is licensed under the terms of the MIT license.
 
 Notice, however, that the RadarScenes data set itself comes with a different license.
+
+## sequences.json
+This file contains one entry for each recorded sequence. Each entry is built from the following information: the category (training or validation of machine learning algorithms), the number of individual scenes within the sequence, the duration in seconds and the names of the sensors which performed measurements within this sequence.

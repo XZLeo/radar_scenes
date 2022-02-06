@@ -1,3 +1,7 @@
+'''
+A nutshell for semantic segmentation network, containing train, validation and prediction. It writes the training 
+into a .json
+'''
 import os
 import numpy as np
 from random import choices
@@ -186,7 +190,7 @@ def validation_data_generator(validation_sequences: list, path_to_dataset: str, 
 
 def main():
     # MODIFY THIS LINE AND INSERT PATH WHERE YOU STORED THE RADARSCENES DATASET
-    path_to_dataset = "/home/USERNAME/datasets/RadarScenes"
+    path_to_dataset = "/home/xzleo/RadarScenes"
     sequence_file = os.path.join(path_to_dataset, "data", "sequences.json")
 
     if not os.path.exists(sequence_file):

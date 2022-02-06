@@ -1,3 +1,30 @@
+'''
+Statistics for a single sequence  An example otuput:
+
+
+In scene 1234, class STATIC occurred 161 times
+
+
+In the whole sequence, class STATIC occurred 1176747 times
+In the whole sequence, class TRUCK occurred 5924 times
+In the whole sequence, class LARGE_VEHICLE occurred 3375 times
+In the whole sequence, class CAR occurred 27555 times
+In the whole sequence, class OTHER occurred 684 times
+In the whole sequence, class BUS occurred 1375 times
+In the whole sequence, class BICYCLE occurred 1153 times
+
+Mapping to a reduced label set results in the following distribution:
+684 detections were ignored (mapped to None)
+In the whole sequence, class STATIC occurred 1176747 times
+In the whole sequence, class LARGE_VEHICLE occurred 10674 times
+In the whole sequence, class CAR occurred 27555 times
+In the whole sequence, class TWO_WHEELER occurred 1153 times
+
+Counting the number of unique dynamic objects in each scene:
+The most unique objects appear in scene 5780 in which 9 different objects were labeled.
+
+'''
+
 import os
 import numpy as np
 from radar_scenes.sequence import Sequence
@@ -41,9 +68,9 @@ def count_unique_objects(sequence: Sequence):
 
 def main():
     # MODIFY THIS LINE AND INSERT PATH WHERE YOU STORED THE RADARSCENES DATASET
-    path_to_dataset = "/home/USERNAME/datasets/RadarScenes"
+    path_to_dataset = "/home/xzleo/RadarScenes"
 
-    # Define the *.json file from which data should be loaded
+    # Define the *.json file from which data should be loaded, change the sequence number
     filename = os.path.join(path_to_dataset, "data", "sequence_137", "scenes.json")
 
     if not os.path.exists(filename):

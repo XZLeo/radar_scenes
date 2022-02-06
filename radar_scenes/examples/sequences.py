@@ -1,3 +1,7 @@
+'''
+Iterate over the individual radar measurements in this sequence and print the number of detections with RCS > 0
+Each sequence has thousands of scenes(frames)
+'''
 import os
 from radar_scenes.sequence import Sequence
 import numpy as np
@@ -5,8 +9,7 @@ import numpy as np
 
 def main():
     # MODIFY THIS LINE AND INSERT PATH WHERE YOU STORED THE RADARSCENES DATASET
-    path_to_dataset = "/home/USERNAME/datasets/RadarScenes"
-
+    path_to_dataset = "/home/xzleo/RadarScenes"
 
     # Define the *.json file from which data should be loaded
     # some random sequence is chosen here.
