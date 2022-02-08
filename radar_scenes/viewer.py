@@ -990,7 +990,7 @@ class PlotWidget:
             self.detections_plot_items.setData(radar_data["y_cc"], radar_data["x_cc"], pen=None, symbol='h',
                                                symbolBrush=symbol_brush, symbolPen=None, symbolSize=7, data=radar_data)
 
-    def plot_convex_hulls(self, radar_data: np.ndarray) -> None:
+    def plot_convex_hulls(self, radar_data: np.ndarray) -> None: # important ! #
         """
         Computes convex hulls around objects which have the same "track_id".
         :param radar_data: numpy array containing the radar data for which the hulls shall be plotted.
@@ -1001,13 +1001,13 @@ class PlotWidget:
         for tr_id in track_ids:
             if len(tr_id) == 0:
                 continue
-            idx = np.where(radar_data["track_id"] == tr_id)[0]
-            if len(idx) < 2:
+            idx = np.where(radar_data["track_id"] == tr_id)[0] # get the index of non-empty track id
+            if len(idx) < 2: # only one point with same tr_id
                 continue
             points = np.zeros((len(idx), 2))
             points[:, 0] = radar_data[idx]["x_cc"]
             points[:, 1] = radar_data[idx]["y_cc"]
-            if len(idx) > 2:
+            if len(idx) > 2: # more than two points with same tr_id
                 try:
                     hull = ConvexHull(points)
                     vertices = points[hull.vertices]

@@ -64,21 +64,16 @@ def trafo_radar_data_world_to_car(scene, other_scenes) -> np.ndarray:
     return np.hstack([scene.radar_data, other_radar_data])
 
 
-def get_frames(sequence: Sequence, cur_idx, timestamps):
+def get_frames(sequence: Sequence, cur_idx, timestamps, n_prev_frames=0 , n_next_frames=0):
     """
     Plot the current frames.
-    This includes:
-        - Detections as scatter points
-        - Camera image
-        - Text labels of all objects containing the class names
-        - Doppler velocity arrows
-        - Convex Hulls around ground truth objects
+    :param: cur_idx: the frame number to be ploted
     :return: None
     """
     if len(timestamps) == 0 or cur_idx >= len(timestamps):
         return
     cur_timestamp = timestamps[cur_idx]
-    current_scene, other_scenes = get_current_scenes(sequence, cur_idx, timestamps, 0, 15)   # 4 sensors together
+    current_scene, other_scenes = get_current_scenes(sequence, cur_idx, timestamps, n_prev_frames, n_next_frames)   # 4 sensors together
     radar_data = trafo_radar_data_world_to_car(current_scene, other_scenes) 
     return radar_data
 
@@ -87,7 +82,7 @@ def plot_frames(radar_data: list):
     # extract x, y from the list
     x = np.zeros(len(radar_data))
     y = np.zeros(len(radar_data))
-    for idx, point in enumerate(radar_data):
+    for idx, point in enumerate(radar_data): # radar_data is ndarray already, can be simplified here !
         x[idx] = point[7]
         y[idx] = point[8]
     col = [0, 0, 0, 1]
@@ -107,12 +102,14 @@ def plot_frames(radar_data: list):
 
 if __name__ == '__main__':
     # extract a frame, i.e., 4 continuous scenes from the start time, for DBSCAN
-    path_to_dataset = "../RadarScenes"
+    path_to_dataset = "../dataset/RadarScenes"
     # Define the *.json file from which data should be loaded
     filename = os.path.join(path_to_dataset, "data", "sequence_137", "scenes.json")
     sequence = Sequence.from_json(filename)
     timestamps = get_timestamps(sequence)
     cur_idx = 0
     radar_data = get_frames(sequence, cur_idx, timestamps)
-    #print(radar_data)
+    print(radar_data)
+    # print(radar_data['track_id'])
+    # print(type(radar_data)) # a lot of empty frames
     plot_frames(radar_data)

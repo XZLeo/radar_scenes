@@ -3,11 +3,15 @@ Generate bounding box as the minimum exterior rectangle of a cluster by searchin
 
 
 '''
+import os
 from ctypes import alignment
 from turtle import shape
-from frame import get_frames, get_timestamps
-from numpy import ndarray, max, min, abs, zeros, shape, sin, cos, pi
+from frame import get_frames, get_timestamps, plot_frames
+import  matplotlib.pyplot as plt
+from numpy import ndarray, max, min, abs, zeros, shape, sin, cos, pi, where
 from typing import List, Tuple
+
+from radar_scenes.sequence import Sequence
 
 # bounding box type
 AABB = Tuple[float, float, float, float]
@@ -61,13 +65,44 @@ def search_OBB(cluster: ndarray, resolution: float)->OBB:
     # restore to origin coordinate by rotating counter-clockwise
     oriented_box[0] = oriented_box[0]*cos(min_theta) + oriented_box[1]*sin(min_theta)
     oriented_box[1] = -oriented_box[0]*sin(min_theta) + oriented_box[1]*cos(min_theta)
-    oriented_box[4] = #?????????? 是不是最终vehicle coorinate 上的偏航角 最好直接弄成0-1？？参考论文
+    oriented_box[4] =  -theta / pi # normalized to -1~ 1
     return oriented_box     
 
 
-def visualize_boxes_cloud():
+def visualize_boxes_cloud()->None:
+    plot_frames()
+    pt
+    return
 
 
-def main():
+def main()->None:
+    # take one secene from one sequence (write the data loader with pytorch to generate all grid maps!)
+    # extract a frame, i.e., 4 continuous scenes from the start time, for DBSCAN
+    path_to_dataset = "../RadarScenes"
+    # Define the *.json file from which data should be loaded
+    filename = os.path.join(path_to_dataset, "data", "sequence_137", "scenes.json")
+    sequence = Sequence.from_json(filename)
+    timestamps = get_timestamps(sequence)
+    cur_idx = 0
+    radar_data = get_frames(sequence, cur_idx, timestamps)
+    # extract cluster 
+    track_ids = set(radar_data["track_id"])
+    for tr_id in track_ids:
+        if len(tr_id) == 0: # no tracked objects
+            continue
+        idx = where(radar_data["track_id"] == tr_id)[0] # get the index of non-empty track id
+        if len(idx) < 2: # only one point with same tr_id
+            # ????? should boxes be generated????
+            continue
+        points = zeros((len(idx), 2))
+        points[:, 0] = radar_data[idx]["x_cc"]
+        points[:, 1] = radar_data[idx]["y_cc"]
+        if len(tr_id) > 2:
+            
+    return
+
+
+
     
 if __name__ == '__main__':
+    main()
