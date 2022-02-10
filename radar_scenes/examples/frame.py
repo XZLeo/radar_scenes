@@ -80,11 +80,8 @@ def get_frames(sequence: Sequence, cur_idx, timestamps, n_prev_frames=0 , n_next
 
 def plot_frames(radar_data: list):
     # extract x, y from the list
-    x = np.zeros(len(radar_data))
-    y = np.zeros(len(radar_data))
-    for idx, point in enumerate(radar_data): # radar_data is ndarray already, can be simplified here !
-        x[idx] = point[7]
-        y[idx] = point[8]
+    x = radar_data["x_cc"]
+    y = radar_data["y_cc"]
     col = [0, 0, 0, 1]
     plt.plot(
         y,
@@ -113,3 +110,5 @@ if __name__ == '__main__':
     # print(radar_data['track_id'])
     # print(type(radar_data)) # a lot of empty frames
     plot_frames(radar_data)
+
+    # change to a frame class, so that boxes can inheritate!

@@ -60,10 +60,8 @@ def get_OBB(cluster: ndarray): #-> Tuple(ndarray, OBB):
     center = dot(center,tvect)
     # transfer to YOLO format
     yawn = arccos(tvect[0, 0]) #radius
-    #print(yawn/pi*180)
-    #yawn = yawn - pi if yawn > pi else yawn # clockwise is negative   !!!!! is this correct???
-    #yawn = yawn -pi/2 if yawn > pi/2 else -(pi/2-yawn)
-    oriented_box = (center[0], center[1], width, height, yawn/pi*180) 
+    yawn = yawn - 2*pi if yawn > pi else yawn # clockwise is negative  
+    oriented_box = (center[0], center[1], width, height, yawn) 
     return corners, oriented_box
 
 
@@ -73,8 +71,8 @@ def visualize_AABB_cloud(points: ndarray, aligned_boxes: List[AABB])->None:
     col = [0, 0, 0, 1]
     #plot point cloud
     ax.plot(
-        points[1, :], #y_cc
-        points[0, :], #x_cc
+        points[0, :], #y_cc
+        points[1, :], #x_cc
         "o",
         markerfacecolor=tuple(col),
         markeredgecolor="k",
@@ -83,15 +81,13 @@ def visualize_AABB_cloud(points: ndarray, aligned_boxes: List[AABB])->None:
     # plot AABB
     for box in aligned_boxes:
         center_x, center_y, w, h = box
-        bottom_left_horizon = center_y - h/2
-        bottom_left_vertical = center_x - w/2 
-        rect = pc.Rectangle((bottom_left_horizon, bottom_left_vertical), h, w, 
+        bottom_left_horizon = center_x - w/2
+        bottom_left_vertical = center_y - h/2 
+        rect = pc.Rectangle((bottom_left_horizon, bottom_left_vertical), w, h, 
                             angle=0, fill=False, edgecolor = 'red',linewidth=2)  # has angle as input!!! the roration is around the bottom left piont
         ax.add_patch(rect) 
     ax.set_aspect('equal', adjustable='box')
-    ax.invert_xaxis() 
-    ax.set_xlabel('y_cc')
-    ax.set_ylabel('x_cc')
+    #ax.invert_xaxis() #y_cc
     plt.show()
     return
 
@@ -102,8 +98,8 @@ def visualize_OBB_cloud(points: ndarray, list_corners)->None:  # merge to one fu
     col = [0, 0, 0, 1]
     #plot point cloud
     ax.plot(
-        points[1, :], #y_cc
-        points[0, :], #x_cc
+        points[0, :], #y_cc
+        points[1, :], #x_cc
         "o",
         markerfacecolor=tuple(col),
         markeredgecolor="k",
@@ -111,11 +107,9 @@ def visualize_OBB_cloud(points: ndarray, list_corners)->None:  # merge to one fu
     )
     # plot OBB                                                                                             
     for corners in list_corners:
-        ax.plot(corners[:,1],corners[:,0],'-')  # draw boxes
+        ax.plot(corners[:,0],corners[:,1],'-')  # draw boxes
     ax.set_aspect('equal', adjustable='box')
-    ax.invert_xaxis() 
-    ax.set_xlabel('y_cc')
-    ax.set_ylabel('x_cc')
+    #ax.invert_xaxis() #y_cc
     plt.show()
     return
 
@@ -148,9 +142,7 @@ def main()->None:
         # generate AABB
         aligned_boxes.append(get_AABB(points))
         corners, oriented_boxes = get_OBB(points)
-        print(oriented_boxes)
         list_corners.append(corners)
-        break
     # visualize the frame
     point_cloud = array([radar_data['x_cc'], radar_data['y_cc']])
     #visualize_AABB_cloud(point_cloud, aligned_boxes)           
